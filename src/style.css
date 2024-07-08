@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background-color: black;
+}
+  
+#htmlContent {
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    font-size: 5em;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Navbar styles */
+.navbar {
+    margin-top: 20px; /* Space between h1 and navbar */
+    display: flex;
+    justify-content: center; /* Center items horizontally */
+}
+
+.navbar a {
+    font-size: 32px; /* Increase font size */
+    color: #333; /* Text color */
+    text-decoration: none; /* Remove underline */
+    margin: 0 30px; /* Spacing between links */
+    padding: 10px 15px; /* Padding inside links */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.navbar a:hover {
+    background-color: #333; /* Darken background on hover */
+    color: #fff; /* Lighten text color on hover */
+}
+  
+#canvasContainer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 50vh;
+}
+  
+#canvas {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* Semi-transparent white background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-screen h1 {
+    color: #fff; /* White text color */
+    font-size: 5em;
+    padding-bottom: 20px;
+}
+
+.loading-content {
+    text-align: center;
+    color: #fff; /* White text color */
+}
+
+.loading-bar {
+    width: 80%; /* Width of the loading bar */
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.2); /* Light grey background */
+    border-radius: 5px;
+    overflow: hidden; /* Hide overflowing gradient */
+}
+
+.loading-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #44d6e0, #99f345); /* Gradient colors */
+    width: 0%; /* Start with 0% width */
+}
