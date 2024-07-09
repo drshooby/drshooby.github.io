@@ -120,7 +120,7 @@ const navLinks = ['Github', 'Connect', 'Contact'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
-const fontName = 'fonts/Roboto Medium_Regular.json';
+const fontName = 'fonts/Roboto_Medium_Regular.json';
 
 fontLoader.load(fontName, function (font) {
     const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
