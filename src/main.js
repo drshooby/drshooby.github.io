@@ -2,13 +2,15 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import modelFile from '../public/models/salsa1.glb';
 import backImage from '../public/hdr/night.exr';
 
 // Loading screen elements
 const loadingBarFill = document.querySelector('.loading-bar-fill');
 const loadingScreen = document.getElementById('loading-screen');
-let HDRILoaded = false;
+let hdriLoaded = false;
 let modelLoaded = false;
 
 // Scene
@@ -17,7 +19,7 @@ scene.background = new THREE.Color(0xcccccc); // Set a background color
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(0, 600, 1500); // Adjust camera position
+camera.position.set(0, 600, 2100); // Adjust camera position
 camera.lookAt(0, -100, 10); // Look at scene origin
 
 // Renderer
@@ -62,9 +64,9 @@ exrloader.load(backImage, (texture) => {
     scene.background = texture;
     scene.environment = texture;
 
-    HDRILoaded = true;
+    hdriLoaded = true;
 
-    if (HDRILoaded && modelLoaded) {
+    if (hdriLoaded && modelLoaded) {
       loadingScreen.style.display = 'none';
     }
 });
@@ -94,14 +96,17 @@ loader.load(modelFile, (gltf) => {
     console.log('Model loaded successfully');
     modelLoaded = true; // Flag model as loaded
 
-    if (HDRILoaded && modelLoaded) {
+    if (hdriLoaded && modelLoaded) {
       loadingScreen.style.display = 'none';
     }
 
 }, onProgress, onError);
 
+const gridCenterX = 0;
+const gridWidth = 2000; // Adjust this if your grid size changes
+
 // ground
-const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+const mesh = new THREE.Mesh( new THREE.PlaneGeometry( gridWidth, gridWidth ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
 mesh.rotation.x = - Math.PI / 2;
 mesh.receiveShadow = true;
 scene.add( mesh );
@@ -111,14 +116,98 @@ grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add( grid );
 
-// Handle window resize
-window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+const navLinks = ['Github', 'Connect', 'Contact'];
+const navGroup = new THREE.Group();
+
+const fontLoader = new FontLoader();
+const fontName = 'fonts/Roboto Medium_Regular.json'; // Example built-in font name (other options available)
+
+fontLoader.load(fontName, function (font) {
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Adjust material as needed
+
+    navLinks.forEach((link, index) => {
+        const textGeometry = new TextGeometry(link, {
+            font: font,
+            size: 40, // Adjust size as needed
+            depth: 10, // Extrude thickness
+            curveSegments: 12,
+            bevelEnabled: false,
+        });
+
+        // Calculate text width to center it relative to the grid
+        textGeometry.computeBoundingBox();
+        const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+        const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350; // Adjust 250 as needed
+
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        textMesh.position.set(textPositionX, -200, 1000); // Adjust Y and Z positions as needed
+        textMesh.name = link; // Set name for raycasting
+        
+        // Hit area for raycasting (larger invisible plane)
+        const hitAreaGeometry = new THREE.PlaneGeometry(200, 200);
+        const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging
+        const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
+        hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
+        hitAreaMesh.position.x += 95; // Adjust X position as needed
+        hitAreaMesh.name = link + '_hit'; // Set a unique name for hit area
+        navGroup.add(hitAreaMesh);
+
+        navGroup.add(textMesh);
+    });
+
+    scene.add(navGroup);
 });
+
+// Raycaster for detecting clicks
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function onMouseClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // mouse.y = mouse.y + 0.1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    console.log('Mouse:', mouse);
+    console.log('Ray Origin:', raycaster.ray.origin);
+    console.log('Ray Direction:', raycaster.ray.direction);
+
+    const intersects = raycaster.intersectObjects(navGroup.children, true);
+
+    if (intersects.length > 0) {
+        const clickedObject = intersects[0].object;
+        openNavLink(clickedObject.name);
+    }
+}
+
+function openNavLink(item) {
+    console.log('Clicked:', item);
+    item = item.replace('_hit', ''); // Remove '_hit' from the name
+    console.log(`Navigating to: ${item}`);
+
+    let target_url = '';
+    
+    switch (item) {
+        case 'Github':
+            target_url = 'https://github.com/shooby-d';
+            break;
+        case 'Connect':
+            target_url = 'https://www.linkedin.com/in/david-shubov/';
+            break;
+        case 'Contact':
+            target_url = 'mailto:david.shubov@gmail.com';
+            break;
+        default:
+            console.log('Invalid link');
+            break;
+    }
+
+    window.open(target_url, '_blank');
+}
+
+window.addEventListener('click', onMouseClick);
 
 // Animation loop
 const clock = new THREE.Clock();
@@ -135,6 +224,15 @@ const animate = () => {
 };
 
 animate();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+});
 
 // Helper functions for loaders and error handling
 function onProgress(xhr) {
