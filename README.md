@@ -1,2 +1,1 @@
-# shooby-d.github.io
- 
+Technologies used: HTML, CSS, JavaScript, Vite, Three.js, Blender, Mixamo
