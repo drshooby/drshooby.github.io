@@ -92,7 +92,7 @@ loader.load(modelFile, (gltf) => {
         mixer.clipAction(clip).play();
     });
 
-    // on-success, log to console and make visible if both HDR and model are loaded
+    // On-success, log to console and make visible if both HDR and model are loaded
     console.log('Model loaded successfully');
     modelLoaded = true; // Flag model as loaded
 
@@ -103,7 +103,7 @@ loader.load(modelFile, (gltf) => {
 }, onProgress, onError);
 
 const gridCenterX = 0;
-const gridWidth = 2000; // Adjust this if your grid size changes
+const gridWidth = 2000;
 
 // ground
 const mesh = new THREE.Mesh( new THREE.PlaneGeometry( gridWidth, gridWidth ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
@@ -120,10 +120,10 @@ const navLinks = ['Github', 'Connect', 'Contact'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
-const fontName = 'fonts/Roboto Medium_Regular.json'; // Example built-in font name (other options available)
+const fontName = 'fonts/Roboto Medium_Regular.json';
 
 fontLoader.load(fontName, function (font) {
-    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Adjust material as needed
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
     navLinks.forEach((link, index) => {
         const textGeometry = new TextGeometry(link, {
@@ -137,7 +137,7 @@ fontLoader.load(fontName, function (font) {
         // Calculate text width to center it relative to the grid
         textGeometry.computeBoundingBox();
         const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
-        const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350; // Adjust 250 as needed
+        const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350;
 
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
         textMesh.position.set(textPositionX, -200, 1000); // Adjust Y and Z positions as needed
@@ -148,8 +148,8 @@ fontLoader.load(fontName, function (font) {
         const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging
         const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
         hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
-        hitAreaMesh.position.x += 95; // Adjust X position as needed
-        hitAreaMesh.name = link + '_hit'; // Set a unique name for hit area
+        hitAreaMesh.position.x += 95;
+        hitAreaMesh.name = link + '_hit';
         navGroup.add(hitAreaMesh);
 
         navGroup.add(textMesh);
@@ -170,10 +170,6 @@ function onMouseClick(event) {
 
     raycaster.setFromCamera(mouse, camera);
 
-    console.log('Mouse:', mouse);
-    console.log('Ray Origin:', raycaster.ray.origin);
-    console.log('Ray Direction:', raycaster.ray.direction);
-
     const intersects = raycaster.intersectObjects(navGroup.children, true);
 
     if (intersects.length > 0) {
@@ -183,9 +179,7 @@ function onMouseClick(event) {
 }
 
 function openNavLink(item) {
-    console.log('Clicked:', item);
     item = item.replace('_hit', ''); // Remove '_hit' from the name
-    console.log(`Navigating to: ${item}`);
 
     let target_url = '';
     
