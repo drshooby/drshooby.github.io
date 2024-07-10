@@ -201,6 +201,7 @@ function openNavLink(item) {
     window.open(target_url, '_self');
 }
 
+// Different browsers have different needs
 window.addEventListener('click', onClick);
 window.addEventListener('touchstart', onClick);
 window.addEventListener('pointerdown', onClick);
