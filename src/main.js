@@ -120,41 +120,42 @@ const navLinks = ['Github', 'Connect', 'Contact'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
-const fontName = 'fonts/Roboto_Medium_Regular.json';
 
-fontLoader.load(fontName, function (font) {
+import('./fonts/RobotoMediumRegular.json').then((fontData) => {
+    const font = fontLoader.parse(fontData);
     const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-
+  
     navLinks.forEach((link, index) => {
-        const textGeometry = new TextGeometry(link, {
-            font: font,
-            size: 40, // Adjust size as needed
-            depth: 10, // Extrude thickness
-            curveSegments: 12,
-            bevelEnabled: false,
-        });
-
-        // Calculate text width to center it relative to the grid
-        textGeometry.computeBoundingBox();
-        const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
-        const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350;
-
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(textPositionX, -200, 1000); // Adjust Y and Z positions as needed
-        textMesh.name = link; // Set name for raycasting
-        
-        // Hit area for raycasting (larger invisible plane)
-        const hitAreaGeometry = new THREE.PlaneGeometry(200, 200);
-        const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging
-        const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
-        hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
-        hitAreaMesh.position.x += 95;
-        hitAreaMesh.name = link + '_hit';
-        navGroup.add(hitAreaMesh);
-
-        navGroup.add(textMesh);
+      const textGeometry = new TextGeometry(link, {
+        font: font,
+        size: 40, // Adjust size as needed
+        height: 10, // Extrude thickness
+        curveSegments: 12,
+        bevelEnabled: false,
+      });
+  
+      // Calculate text width to center it relative to the grid
+      textGeometry.computeBoundingBox();
+      const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+      const gridCenterX = 0; // Assuming a value for gridCenterX; adjust as needed
+      const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350;
+  
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.position.set(textPositionX, -200, 1000); // Adjust Y and Z positions as needed
+      textMesh.name = link; // Set name for raycasting
+  
+      // Hit area for raycasting (larger invisible plane)
+      const hitAreaGeometry = new THREE.PlaneGeometry(200, 200);
+      const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging
+      const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
+      hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
+      hitAreaMesh.position.x += 95;
+      hitAreaMesh.name = link + '_hit';
+      navGroup.add(hitAreaMesh);
+  
+      navGroup.add(textMesh);
     });
-
+  
     scene.add(navGroup);
 });
 
