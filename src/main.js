@@ -102,21 +102,20 @@ loader.load(modelFile, (gltf) => {
 
 }, onProgress, onError);
 
-const gridCenterX = 0;
 const gridWidth = 2000;
 
 // ground
 const mesh = new THREE.Mesh( new THREE.PlaneGeometry( gridWidth, gridWidth ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
 mesh.rotation.x = - Math.PI / 2;
 mesh.receiveShadow = true;
-scene.add( mesh );
+scene.add(mesh);
 
 const grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
 grid.material.opacity = 0.2;
 grid.material.transparent = true;
-scene.add( grid );
+scene.add(grid);
 
-const navLinks = ['Github', 'Connect', 'Contact'];
+const navLinks = ['GitHub', 'Connect', 'Contact'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
@@ -129,7 +128,7 @@ import('./fonts/RobotoMediumRegular.json').then((fontData) => {
       const textGeometry = new TextGeometry(link, {
         font: font,
         size: 40, // Adjust size as needed
-        height: 10, // Extrude thickness
+        depth: 10, // Extrude thickness
         curveSegments: 12,
         bevelEnabled: false,
       });
@@ -163,7 +162,7 @@ import('./fonts/RobotoMediumRegular.json').then((fontData) => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function onMouseClick(event) {
+function onClick(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -185,7 +184,7 @@ function openNavLink(item) {
     let target_url = '';
     
     switch (item) {
-        case 'Github':
+        case 'GitHub':
             target_url = 'https://github.com/shooby-d';
             break;
         case 'Connect':
@@ -199,10 +198,12 @@ function openNavLink(item) {
             break;
     }
 
-    window.open(target_url, '_blank');
+    window.open(target_url, '_self');
 }
 
-window.addEventListener('click', onMouseClick);
+window.addEventListener('click', onClick);
+window.addEventListener('touchstart', onClick);
+window.addEventListener('pointerdown', onClick);
 
 // Animation loop
 const clock = new THREE.Clock();
