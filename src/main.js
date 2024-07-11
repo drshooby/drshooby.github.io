@@ -19,7 +19,7 @@ scene.background = new THREE.Color(0xcccccc); // Set a background color
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(0, 600, 2100); // Adjust camera position
+camera.position.set(0, 600, 2450); // Adjust camera position
 camera.lookAt(0, -100, 10); // Look at scene origin
 
 // Renderer
@@ -69,7 +69,8 @@ exrloader.load(backImage, (texture) => {
     if (hdriLoaded && modelLoaded) {
       loadingScreen.style.display = 'none';
     }
-});
+    console.log("EXR loaded successfully")
+}, onProgress, onError);
 
 // Load 3D model
 let mixer;
@@ -127,7 +128,7 @@ import('./fonts/RobotoMediumRegular.json').then((fontData) => {
     navLinks.forEach((link, index) => {
       const textGeometry = new TextGeometry(link, {
         font: font,
-        size: 40, // Adjust size as needed
+        size: 50, // Adjust size as needed
         depth: 10, // Extrude thickness
         curveSegments: 12,
         bevelEnabled: false,
