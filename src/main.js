@@ -106,7 +106,7 @@ loader.load(modelFile, (gltf) => {
 
 const gridWidth = 2000;
 
-// ground
+// Ground
 const mesh = new THREE.Mesh( new THREE.PlaneGeometry( gridWidth, gridWidth ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
 mesh.rotation.x = - Math.PI / 2;
 mesh.receiveShadow = true;
