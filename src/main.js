@@ -219,11 +219,14 @@ audioLoader.load(ncsMusic, (buffer) => {
 
 // Function to resume AudioContext and play sound
 function toggleMusic() {
+    alert('ToggleMusic called');
     if (listener.context.state === 'suspended') {
+        alert('AudioContext resumed');
         listener.context.resume().then(() => {
             sound.play();
         });
     } else if (listener.context.state === 'running') {
+        alert('AudioContext running');
         if (sound.isPlaying) {
             sound.pause();
         } else {
