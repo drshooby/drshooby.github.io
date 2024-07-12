@@ -185,7 +185,7 @@ function openNavLink(item) {
     
     switch (item) {
         case 'GitHub':
-            target_url = 'https://github.com/shooby-d';
+            target_url = 'https://github.com/drshooby';
             break;
         case 'Connect':
             target_url = 'https://www.linkedin.com/in/david-shubov/';
