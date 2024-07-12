@@ -20,7 +20,7 @@ scene.background = new THREE.Color(0xcccccc); // Set a background color
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-camera.position.set(0, 600, 2450); // Adjust camera position
+camera.position.set(0, 600, 2600); // Adjust camera position
 camera.lookAt(0, -100, 10); // Look at scene origin
 
 // Renderer
@@ -117,7 +117,7 @@ grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add(grid);
 
-const navLinks = ['GitHub', 'Connect', 'Music'];
+const navLinks = ['GitHub', 'Connect', 'Music (PC)'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
@@ -139,15 +139,15 @@ import('./fonts/RobotoMediumRegular.json').then((fontData) => {
       textGeometry.computeBoundingBox();
       const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
       const gridCenterX = 0; // Assuming a value for gridCenterX; adjust as needed
-      const textPositionX = gridCenterX - textWidth / 2 + index * 350 - 350;
+      const textPositionX = gridCenterX - textWidth / 2 + index * 550 - 550;
   
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(textPositionX, -200, 1000); // Adjust Y and Z positions as needed
       textMesh.name = link; // Set name for raycasting
   
       // Hit area for raycasting (larger invisible plane)
-      const hitAreaGeometry = new THREE.PlaneGeometry(200, 200);
-      const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging, transparent: true, opacity: 0
+      const hitAreaGeometry = new THREE.PlaneGeometry(250, 200);
+      const hitAreaMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: 0 }); // color: 0xff0000 for debugging, transparent: true, opacity: 0
       const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
       hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
       hitAreaMesh.position.x += 95;
@@ -167,8 +167,6 @@ const mouse = new THREE.Vector2();
 function onClick(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    // mouse.y = mouse.y + 0.1;
 
     raycaster.setFromCamera(mouse, camera);
 
@@ -192,7 +190,7 @@ function openNavLink(item) {
         case 'Connect':
             target_url = 'https://www.linkedin.com/in/david-shubov/';
             break;
-        case 'Music':
+        case 'Music (PC)':
             toggleMusic();
             return;
         default:
