@@ -193,7 +193,7 @@ function openNavLink(item) {
             target_url = 'https://www.linkedin.com/in/david-shubov/';
             break;
         case 'Music':
-            resumeAudioContext();
+            toggleMusic();
             return;
         default:
             console.log('Invalid link');
@@ -204,8 +204,9 @@ function openNavLink(item) {
 }
 
 // Different browsers have different needs
-window.addEventListener('click', onClick);
 window.addEventListener('touchstart', onClick);
+window.addEventListener('pointerdown', onClick);
+window.addEventListener('click', onClick);
 
 const listener = new THREE.AudioListener();
 camera.add(listener);
@@ -220,15 +221,17 @@ audioLoader.load(ncsMusic, (buffer) => {
 });
 
 // Function to resume AudioContext and play sound
-function resumeAudioContext() {
+function toggleMusic() {
     if (listener.context.state === 'suspended') {
         listener.context.resume().then(() => {
             sound.play();
         });
     } else if (listener.context.state === 'running') {
-        listener.context.suspend().then(() => {
+        if (sound.isPlaying) {
             sound.pause();
-        });
+        } else {
+            sound.play();
+        }
     }
 }
 
