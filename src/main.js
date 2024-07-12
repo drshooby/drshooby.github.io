@@ -203,10 +203,8 @@ function openNavLink(item) {
     window.open(target_url, '_self');
 }
 
-// Different browsers have different needs
-window.addEventListener('touchstart', onClick);
-window.addEventListener('pointerdown', onClick);
-window.addEventListener('click', onClick);
+document.addEventListener('pointerdown', onClick);
+
 
 const listener = new THREE.AudioListener();
 camera.add(listener);
@@ -217,7 +215,6 @@ audioLoader.load(ncsMusic, (buffer) => {
     sound.setBuffer(buffer);
     sound.setLoop(true);
     sound.setVolume(0.15);
-    sound.play();
 });
 
 // Function to resume AudioContext and play sound
