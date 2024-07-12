@@ -1,6 +1,6 @@
 Welcome to David's personal website 😀
 
-[Click here to check it out](https://shooby-d.github.io)
+[Click here to check it out](https://drshooby.github.io)
 
 Technologies used: HTML, CSS, JavaScript, Vite, Three.js, Blender, Mixamo
 
