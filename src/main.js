@@ -6,6 +6,7 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import modelFile from '../public/models/house1.glb';
 import backImage from '../public/hdr/night.exr';
+import ncsMusic from '../public/music/Warriyo - Mortals (feat. Laura Brehm) [NCS Release].ogg';
 
 // Loading screen elements
 const loadingBarFill = document.querySelector('.loading-bar-fill');
@@ -211,7 +212,7 @@ camera.add(listener);
 
 const sound = new THREE.Audio(listener);
 const audioLoader = new THREE.AudioLoader();
-audioLoader.load('Warriyo - Mortals (feat. Laura Brehm) [NCS Release].ogg', (buffer) => {
+audioLoader.load(ncsMusic, (buffer) => {
     sound.setBuffer(buffer);
     sound.setLoop(true);
     sound.setVolume(0.15);
@@ -224,12 +225,10 @@ function resumeAudioContext() {
         listener.context.resume().then(() => {
             sound.play();
         });
-    } else {
-        sound.play();
-    }
-
-    if (listener.context.state === 'running') {
-        listener.context.suspend();
+    } else if (listener.context.state === 'running') {
+        listener.context.suspend().then(() => {
+            sound.pause();
+        });
     }
 }
 
