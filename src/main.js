@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import modelFile from '../public/models/salsa1.glb';
+import modelFile from '../public/models/house1.glb';
 import backImage from '../public/hdr/night.exr';
 
 // Loading screen elements
@@ -116,7 +116,7 @@ grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add(grid);
 
-const navLinks = ['GitHub', 'Connect', 'Contact'];
+const navLinks = ['GitHub', 'Connect', 'Music'];
 const navGroup = new THREE.Group();
 
 const fontLoader = new FontLoader();
@@ -146,7 +146,7 @@ import('./fonts/RobotoMediumRegular.json').then((fontData) => {
   
       // Hit area for raycasting (larger invisible plane)
       const hitAreaGeometry = new THREE.PlaneGeometry(200, 200);
-      const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging
+      const hitAreaMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }); // color: 0xff0000 for debugging, transparent: true, opacity: 0
       const hitAreaMesh = new THREE.Mesh(hitAreaGeometry, hitAreaMaterial);
       hitAreaMesh.position.copy(textMesh.position); // Align hit area with text mesh
       hitAreaMesh.position.x += 95;
@@ -191,9 +191,9 @@ function openNavLink(item) {
         case 'Connect':
             target_url = 'https://www.linkedin.com/in/david-shubov/';
             break;
-        case 'Contact':
-            target_url = 'mailto:david.shubov@gmail.com';
-            break;
+        case 'Music':
+            resumeAudioContext();
+            return;
         default:
             console.log('Invalid link');
             break;
@@ -205,7 +205,33 @@ function openNavLink(item) {
 // Different browsers have different needs
 window.addEventListener('click', onClick);
 window.addEventListener('touchstart', onClick);
-window.addEventListener('pointerdown', onClick);
+
+const listener = new THREE.AudioListener();
+camera.add(listener);
+
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('Warriyo - Mortals (feat. Laura Brehm) [NCS Release].ogg', (buffer) => {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.15);
+    sound.play();
+});
+
+// Function to resume AudioContext and play sound
+function resumeAudioContext() {
+    if (listener.context.state === 'suspended') {
+        listener.context.resume().then(() => {
+            sound.play();
+        });
+    } else {
+        sound.play();
+    }
+
+    if (listener.context.state === 'running') {
+        listener.context.suspend();
+    }
+}
 
 // Animation loop
 const clock = new THREE.Clock();
