@@ -1,4 +1,4 @@
-Welcome to David's personal website 😀
+Welcome to David's interactive web project 😀
 
 [Click here to check it out](https://drshooby.github.io)
 
